@@ -64,12 +64,13 @@ public class EventService {
 		try {
 			val response = web3.ethGetFilterChanges(filterId).send();
 			for (val entry : getLogs(response)) {
-				log.info("Parsing...");
+				log.info("Parsing event...");
 				val event = parseEvent(entry);
 				log.info(" - {}", event);
 				sendEvent(event);
 
 				if (event != null) {
+					log.info("Saving event...");
 					repository.save(event);
 				}
 			}

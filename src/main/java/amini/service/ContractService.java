@@ -36,7 +36,7 @@ public class ContractService {
 	}
 
 	@SneakyThrows
-	private void send(Event event) {
+	public void send(Event event) {
 		val address = new Address(Addresses.ADDRESS2);
 		val amount = new Uint256(new BigInteger("1"));
 		val meta = new DynamicBytes(MAPPER.writeValueAsBytes(event));

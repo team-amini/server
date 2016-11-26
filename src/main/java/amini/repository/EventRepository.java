@@ -1,9 +1,11 @@
 package amini.repository;
 
 import static java.util.stream.Collectors.toList;
+import static org.elasticsearch.action.support.WriteRequest.RefreshPolicy.IMMEDIATE;
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+import static org.elasticsearch.search.sort.SortOrder.ASC;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -36,6 +38,7 @@ public class EventRepository {
 
 	@PostConstruct
 	public void init() {
+		log.info("Initializing index...");
 		val indices = client.admin().indices();
 		// indices.prepareDelete(INDEX_NAME).get();
 
@@ -46,7 +49,7 @@ public class EventRepository {
 
 	public void save(Event event) {
 		val source = convert(event);
-		client.prepareIndex(INDEX_NAME, TYPE_NAME).setSource(source).get();
+		client.prepareIndex(INDEX_NAME, TYPE_NAME).setSource(source).setRefreshPolicy(IMMEDIATE).get();
 	}
 
 	public List<Event> list(String type, String instrument, String senderAccount, Long startTime, Long endTime) {
@@ -72,7 +75,7 @@ public class EventRepository {
 			query.filter().add(termQuery("senderAccount", instrument));
 		}
 
-		val request = client.prepareSearch(INDEX_NAME).setQuery(query);
+		val request = client.prepareSearch(INDEX_NAME).setQuery(query).addSort("timestamp", ASC);
 		log.info("Request: {}", request);
 
 		val response = request.get();
