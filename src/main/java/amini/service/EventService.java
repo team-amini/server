@@ -21,6 +21,7 @@ import org.web3j.protocol.core.methods.response.EthLog.LogObject;
 import org.web3j.protocol.core.methods.response.EthLog.LogResult;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 
 import amini.model.Event;
@@ -32,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class EventService {
-	
+
 	static final ObjectMapper MAPPER = new ObjectMapper();
 
 	@Autowired
@@ -44,6 +45,12 @@ public class EventService {
 
 	final Set<ResponseBodyEmitter> emitters = Sets.newConcurrentHashSet();
 
+	@PostConstruct
+	public void init() throws Exception {
+		val response = web3.ethNewFilter(allFilter()).send();
+		filterId = response.getFilterId();
+	}
+
 	public void register(ResponseBodyEmitter emitter) {
 		emitters.add(emitter);
 	}
@@ -54,17 +61,33 @@ public class EventService {
 		if (filterId == null)
 			return;
 
-		val response = web3.ethGetFilterChanges(filterId).send();
-		for (val entry : getLogs(response)) {
-			val data = getString(entry.get().getData());
+		try {
+			val response = web3.ethGetFilterChanges(filterId).send();
+			for (val entry : getLogs(response)) {
+				log.info("Parsing...");
+				val event = parseEvent(entry);
+				log.info(" - {}", event);
+				sendEvent(event);
 
-			val topics = entry.get().getTopics();
-			log.info(" - {}: {}", data, topics);
-			val event = new Event().setInstrument("MetaCoin").setTimestamp(System.currentTimeMillis()).setData(data);
+				if (event != null) {
+					repository.save(event);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-			sendEvent(event);
+	@SneakyThrows
+	private Event parseEvent(EthLog.LogResult<EthLog.LogObject> entry) {
+		try {
+			String data = getString(entry.get().getData());
+			data = data.substring(data.indexOf("{"));
+			log.info("data: {}", data);
 
-			repository.save(event);
+			return MAPPER.readValue(data, Event.class);
+		} catch (Exception e) {
+			return null;
 		}
 	}
 
@@ -73,21 +96,15 @@ public class EventService {
 		while (iterator.hasNext()) {
 			val emitter = iterator.next();
 			try {
-				emitter.send("data: " + MAPPER.writeValueAsString(event) +  "\n\n");
+				emitter.send("data: " + MAPPER.writeValueAsString(event) + "\n\n");
 			} catch (Exception e) {
 				log.warn("{}", e.getMessage());
 			}
 		}
 	}
 
-	@PostConstruct
-	public void init() throws Exception {
-		val response = web3.ethNewFilter(allFilter()).send();
-		filterId = response.getFilterId();
-	}
-
 	private static EthFilter allFilter() {
-		val address = (List<String>) null;
+		val address = ImmutableList.<String>of();
 		return new EthFilter(EARLIEST, LATEST, address);
 	}
 

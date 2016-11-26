@@ -39,6 +39,7 @@
         <appender-ref ref="STDOUT" />
     </root>
 
+    <logger level="DEBUG" name="org.apache.http"/>
     <logger level="ERROR" name="general"/>
     <logger level="ERROR" name="net"/>
     <logger level="ERROR" name="wire"/>

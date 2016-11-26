@@ -2,7 +2,8 @@
 # Amini - Server Config file
 #
 
-# https://amini.by.ether.camp:8555/sandbox/df7558b136
-network.url: https://andricdu.by.ether.camp:8555/sandbox/d51e67a7fb
+network.url: http://amini.canadaeast.cloudapp.azure.com:8546
+# network.url: https://andricdu.by.ether.camp:8555/sandbox/d51e67a7fb
+# network.url: https://amini.by.ether.camp:8555/sandbox/df7558b136
 
 index.server: amini.canadaeast.cloudapp.azure.com

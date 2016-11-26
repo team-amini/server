@@ -26,9 +26,13 @@ public class EventController {
 	EventService service;
 
 	@GetMapping("/history")
-	public List<Event> getHistory(@RequestParam(required = false) Long startTime,
-			@RequestParam(required = false) Long endTime) {
-		return repository.list(startTime, endTime);
+	public List<Event> getHistory(
+			@RequestParam(name ="type", required = false) String type,
+			@RequestParam(name ="instrument", required = false) String instrument,
+			@RequestParam(name ="senderAccount", required = false) String senderAccount,
+			@RequestParam(name ="startTime", required = false) Long startTime,
+			@RequestParam(name ="endTime", required = false) Long endTime) {
+		return repository.list(type, instrument, senderAccount, startTime, endTime);
 	}
 	
 	@GetMapping("/stream")
