@@ -1,5 +1,8 @@
 package amini.service;
 
+import static java.lang.Float.parseFloat;
+import static java.lang.Thread.sleep;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -12,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import amini.model.Event;
 import lombok.SneakyThrows;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
@@ -32,22 +36,21 @@ public class SimulationService {
 
 	@Async
 	@SneakyThrows
+	@SuppressWarnings("unused")
 	public void simulate() {
 		val reader = new BufferedReader(new InputStreamReader(transactionsFile.getInputStream()));
 		String line = null;
 		boolean flag = true;
-		while((line = reader.readLine()) != null) {
+		while ((line = reader.readLine()) != null) {
 			if (flag) {
 				flag = false;
 				continue;
 			}
-			
+
 			String[] fields = line.split("\t");
-			
-			// "City	Population	Latitude	Longitude	Latitude.Point.From	Longitude.Point.From	To	From	Value	Time	Longitude.Point.To	Latitude.Point.To"
+
 			int i = 0;
-			String city = fields[i++];
-			String population = fields[i++];
+			String cityFrom = fields[i++];
 			String latitude = fields[i++];
 			String longitude = fields[i++];
 			String latitudeFrom = fields[i++];
@@ -58,11 +61,17 @@ public class SimulationService {
 			String time = fields[i++];
 			String latitudeTo = fields[i++];
 			String longitudeTo = fields[i++];
-			
+			String cityTo = fields[i++];
+
+			val event = new Event().setCityFrom(cityFrom).setCityTo(cityTo).setLatitudeFrom(latitudeFrom)
+					.setLongitudeFrom(longitudeFrom).setLatitudeTo(latitudeFrom).setLongitudeTo(longitudeTo)
+					.setSenderAccount(from).setReceiverAccount(to).setAmount(parseFloat(value));
+
 			log.info("{}", Arrays.toString(fields));
-			service.send();
+			service.send(event);
+			sleep(1000);
 		}
-		
+
 	}
 
 }

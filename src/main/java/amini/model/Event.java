@@ -10,12 +10,17 @@ public class Event {
 	long timestamp = System.currentTimeMillis();
 	String type = "transfer";
 	String instrument = "MetaCoin";
-	String senderAddress;
 	String senderAccount;
-	String senderIp;
-	String receiverAddress;
+	String cityTo;
+	String cityFrom;
+	long population;
 	String receiverAccount;
-	String receiverIp;
+	String latitudeFrom;
+	String longitudeFrom;
+	String latitudeTo;
+	String longitudeTo;
+	boolean insider = false; 
+	
 	float amount;
 	
 }

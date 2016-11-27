@@ -40,7 +40,7 @@ public class ContractService {
 		val address = new Address(Addresses.ADDRESS2);
 		val amount = new Uint256(new BigInteger("1"));
 		val meta = new DynamicBytes(MAPPER.writeValueAsBytes(event));
-		val response = contract.sendCoin(address, amount, meta).get();
+		val response = contract.sendCoin(address, amount, meta).get(); // Blocking
 		log.info("Response: {}", response.getBlockNumber());
 	}
 
