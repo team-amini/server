@@ -1,5 +1,7 @@
 package amini.model;
 
+import java.util.Random;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -20,7 +22,7 @@ public class Event {
 	String latitudeTo;
 	String longitudeTo;
 	boolean insider = false; 
-	
+	float balance;
 	float amount;
 	
 }

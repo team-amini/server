@@ -6,6 +6,7 @@ import static java.lang.Thread.sleep;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Random;
 
 import javax.annotation.PostConstruct;
 
@@ -68,13 +69,17 @@ public class SimulationService {
 				.setLatitudeFrom(latitudeFrom).setLongitudeFrom(longitudeFrom)
 				.setLatitudeTo(latitudeFrom).setLongitudeTo(longitudeTo)
 				.setSenderAccount(from).setReceiverAccount(to)
-				.setAmount(parseFloat(value));
+				.setAmount(parseFloat(value)).setBalance(randFloat(1000f, 10000000f));
 			
 			log.info("{}", Arrays.toString(fields));
 			service.send(event);
-			sleep(1000);
 		}
 		
+	}
+
+	private static float randFloat(float min, float max) {
+		val r = new Random();
+		return min + (float) (r.nextFloat() * ((1 + max) - min));
 	}
 
 }
