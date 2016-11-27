@@ -22,7 +22,7 @@ import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
+//@Service
 public class SimulationService {
 
 	@Autowired
@@ -42,14 +42,14 @@ public class SimulationService {
 		val reader = new BufferedReader(new InputStreamReader(transactionsFile.getInputStream()));
 		String line = null;
 		boolean flag = true;
-		while((line = reader.readLine()) != null) {
+		while ((line = reader.readLine()) != null) {
 			if (flag) {
 				flag = false;
 				continue;
 			}
-			
+
 			String[] fields = line.split("\t");
-			
+
 			int i = 0;
 			String cityFrom = fields[i++];
 			String latitude = fields[i++];
@@ -74,7 +74,7 @@ public class SimulationService {
 			log.info("{}", Arrays.toString(fields));
 			service.send(event);
 		}
-		
+
 	}
 
 	private static float randFloat(float min, float max) {

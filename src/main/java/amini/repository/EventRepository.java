@@ -40,7 +40,10 @@ public class EventRepository {
 	public void init() {
 		log.info("Initializing index...");
 		val indices = client.admin().indices();
-		// indices.prepareDelete(INDEX_NAME).get();
+		val delete = true;
+		if (delete) {
+			indices.prepareDelete(INDEX_NAME).get();
+		}
 
 		if (!indices.prepareExists(INDEX_NAME).get().isExists()) {
 			indices.prepareCreate(INDEX_NAME).get();
@@ -75,7 +78,7 @@ public class EventRepository {
 			query.filter().add(termQuery("senderAccount", instrument));
 		}
 
-		val request = client.prepareSearch(INDEX_NAME).setQuery(query).addSort("timestamp", ASC);
+		val request = client.prepareSearch(INDEX_NAME).setTypes(TYPE_NAME).setQuery(query).addSort("timestamp", ASC);
 		log.info("Request: {}", request);
 
 		val response = request.get();

@@ -42,6 +42,9 @@ public class EventService {
 
 	@Autowired
 	EventRepository repository;
+	
+	@Autowired
+	AlertService esperService;
 
 	final Set<ResponseBodyEmitter> emitters = Sets.newConcurrentHashSet();
 
@@ -52,6 +55,8 @@ public class EventService {
 	}
 
 	public void register(ResponseBodyEmitter emitter) {
+		emitter.onCompletion(() -> emitters.remove(emitter));
+		emitter.onTimeout(() -> emitters.remove(emitter));
 		emitters.add(emitter);
 	}
 
@@ -70,12 +75,27 @@ public class EventService {
 				sendEvent(event);
 
 				if (event != null) {
+					log.info("Registering event...");
+					esperService.update(event);
+					
 					log.info("Saving event...");
 					repository.save(event);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void sendEvent(Object event) {
+		val iterator = emitters.iterator();
+		while (iterator.hasNext()) {
+			val emitter = iterator.next();
+			try {
+				emitter.send("data: " + MAPPER.writeValueAsString(event) + "\n\n");
+			} catch (Exception e) {
+				log.warn("{}", e.getMessage());
+			}
 		}
 	}
 
@@ -89,18 +109,6 @@ public class EventService {
 			return MAPPER.readValue(data, Event.class);
 		} catch (Exception e) {
 			return null;
-		}
-	}
-
-	private void sendEvent(Event event) {
-		val iterator = emitters.iterator();
-		while (iterator.hasNext()) {
-			val emitter = iterator.next();
-			try {
-				emitter.send("data: " + MAPPER.writeValueAsString(event) + "\n\n");
-			} catch (Exception e) {
-				log.warn("{}", e.getMessage());
-			}
 		}
 	}
 
