@@ -21,7 +21,7 @@ import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-//@Service
+@Service
 public class SimulationService {
 
 	@Autowired
@@ -65,8 +65,7 @@ public class SimulationService {
 
 			val event = new Event().setCityFrom(cityFrom).setCityTo(cityTo).setLatitudeFrom(latitudeFrom)
 					.setLongitudeFrom(longitudeFrom).setLatitudeTo(latitudeFrom).setLongitudeTo(longitudeTo)
-					.setSenderAccount(from).setReceiverAccount(to).setAmount(parseFloat(value))
-					.setBalance(10000.0f);
+					.setSenderAccount(from).setReceiverAccount(to).setAmount(parseFloat(value)).setBalance(10000.0f);
 
 			log.info("{}", Arrays.toString(fields));
 			service.send(event);
