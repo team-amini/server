@@ -44,7 +44,7 @@ public class EventService {
 	EventRepository repository;
 	
 	@Autowired
-	AlertService esperService;
+	AlertService alertService;
 
 	final Set<ResponseBodyEmitter> emitters = Sets.newConcurrentHashSet();
 
@@ -55,6 +55,7 @@ public class EventService {
 	}
 
 	public void register(ResponseBodyEmitter emitter) {
+		log.info("Registering emitter...");
 		emitter.onCompletion(() -> emitters.remove(emitter));
 		emitter.onTimeout(() -> emitters.remove(emitter));
 		emitters.add(emitter);
@@ -76,14 +77,14 @@ public class EventService {
 
 				if (event != null) {
 					log.info("Registering event...");
-					esperService.update(event);
+					alertService.update(event);
 					
 					log.info("Saving event...");
 					repository.save(event);
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error polling:", e);
 		}
 	}
 
@@ -95,6 +96,8 @@ public class EventService {
 				emitter.send("data: " + MAPPER.writeValueAsString(event) + "\n\n");
 			} catch (Exception e) {
 				log.warn("{}", e.getMessage());
+				log.warn("Removing...");
+				iterator.remove();
 			}
 		}
 	}

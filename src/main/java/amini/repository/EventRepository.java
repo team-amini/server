@@ -40,7 +40,7 @@ public class EventRepository {
 	public void init() {
 		log.info("Initializing index...");
 		val indices = client.admin().indices();
-		val delete = true;
+		val delete = false;
 		if (delete) {
 			indices.prepareDelete(INDEX_NAME).get();
 		}
