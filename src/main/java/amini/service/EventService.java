@@ -50,7 +50,7 @@ public class EventService {
 
 	@PostConstruct
 	public void init() throws Exception {
-		val response = web3.ethNewFilter(allFilter()).send();
+		val response = web3.ethNewFilter(new EthFilter()).send();
 		filterId = response.getFilterId();
 	}
 

@@ -1,14 +1,12 @@
 package amini.service;
 
 import java.math.BigInteger;
-import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.DynamicBytes;
 import org.web3j.abi.datatypes.generated.Uint256;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -17,7 +15,9 @@ import amini.model.Addresses;
 import amini.model.Event;
 import lombok.SneakyThrows;
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class ContractService {
 
@@ -27,11 +27,13 @@ public class ContractService {
 	MetaCoin contract;
 
 	@SneakyThrows
-	public Future<TransactionReceipt> send(Event event) {
+	public void send(Event event) {
 		val address = new Address(Addresses.ADDRESS2);
 		val amount = new Uint256(new BigInteger("1"));
 		val meta = new DynamicBytes(MAPPER.writeValueAsBytes(event));
-		return contract.sendCoin(address, amount, meta);
+		val receipt = contract.sendCoin(address, amount, meta);
+
+		log.info("[Contract] Receipt: {}", receipt.get().getBlockNumber());
 	}
 
 }

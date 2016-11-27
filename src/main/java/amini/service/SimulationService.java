@@ -32,44 +32,42 @@ public class SimulationService {
 	public void simulate() {
 		log.info("[Simulation] >>>> START!!!");
 
-		for (int j = 1; j < 3; j++) {
-			val reader = new BufferedReader(new InputStreamReader(transactionsFile.getInputStream()));
-			String line = null;
-			boolean flag = true;
+		val reader = new BufferedReader(new InputStreamReader(transactionsFile.getInputStream()));
+		String line = null;
+		boolean flag = true;
 
-			int n = 1;
-			while ((line = reader.readLine()) != null) {
-				if (flag) {
-					flag = false;
-					continue;
-				}
-
-				String[] fields = line.split("\t");
-
-				int i = 0;
-				String cityFrom = fields[i++];
-				String latitude = fields[i++];
-				String longitude = fields[i++];
-				String latitudeFrom = fields[i++];
-				String longitudeFrom = fields[i++];
-				String to = fields[i++];
-				String from = fields[i++];
-				String value = fields[i++];
-				String time = fields[i++];
-				String latitudeTo = fields[i++];
-				String longitudeTo = fields[i++];
-				String cityTo = fields[i++];
-
-				val event = new Event().setCityFrom(cityFrom).setCityTo(cityTo).setLatitudeFrom(latitudeFrom)
-						.setLongitudeFrom(longitudeFrom).setLatitudeTo(latitudeFrom).setLongitudeTo(longitudeTo)
-						.setSenderAccount(from).setReceiverAccount(to).setAmount(parseFloat(value))
-						.setBalance(randFloat(1000f, 10000000f));
-
-				log.info("[Simulation][{}]: {}", n++, event);
-				val receipt = service.send(event);
-				// log.info("Recept: {}", receipt.get());
+		int n = 1;
+		while ((line = reader.readLine()) != null) {
+			if (flag) {
+				flag = false;
+				continue;
 			}
+
+			String[] fields = line.split("\t");
+
+			int i = 0;
+			String cityFrom = fields[i++];
+			String latitude = fields[i++];
+			String longitude = fields[i++];
+			String latitudeFrom = fields[i++];
+			String longitudeFrom = fields[i++];
+			String to = fields[i++];
+			String from = fields[i++];
+			String value = fields[i++];
+			String time = fields[i++];
+			String latitudeTo = fields[i++];
+			String longitudeTo = fields[i++];
+			String cityTo = fields[i++];
+
+			val event = new Event().setCityFrom(cityFrom).setCityTo(cityTo).setLatitudeFrom(latitudeFrom)
+					.setLongitudeFrom(longitudeFrom).setLatitudeTo(latitudeFrom).setLongitudeTo(longitudeTo)
+					.setSenderAccount(from).setReceiverAccount(to).setAmount(parseFloat(value))
+					.setBalance(randFloat(1000f, 10000000f));
+
+			log.info("[Simulation][{}]: {}", n++, event);
+			service.send(event);
 		}
+		
 		log.info("[Simulation] <<< END!!!");
 	}
 
