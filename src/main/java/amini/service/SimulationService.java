@@ -49,7 +49,6 @@ public class SimulationService {
 			
 			String[] fields = line.split("\t");
 			
-			// "City	Population	Latitude	Longitude	Latitude.Point.From	Longitude.Point.From	To	From	Value	Time	Longitude.Point.To	Latitude.Point.To"
 			int i = 0;
 			String cityFrom = fields[i++];
 			String latitude = fields[i++];

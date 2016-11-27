@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.DynamicBytes;
@@ -41,7 +40,7 @@ public class ContractService {
 		val address = new Address(Addresses.ADDRESS2);
 		val amount = new Uint256(new BigInteger("1"));
 		val meta = new DynamicBytes(MAPPER.writeValueAsBytes(event));
-		val response = contract.sendCoin(address, amount, meta).get();
+		val response = contract.sendCoin(address, amount, meta).get(); // Blocking
 		log.info("Response: {}", response.getBlockNumber());
 	}
 
