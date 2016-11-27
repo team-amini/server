@@ -8,7 +8,6 @@
             <level>INFO</level>
         </filter>
 
-
         <append>true</append>
         <encoder>
             <pattern>%-5relative %-5level %logger{35} - %msg%n</pattern>
@@ -24,7 +23,6 @@
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
         </filter>
@@ -53,6 +51,5 @@
     <logger level="ERROR" name="facade"/>
     <logger level="ERROR" name="execute"/>
     <logger level="ERROR" name="blockqueue"/>
-
 
 </configuration>

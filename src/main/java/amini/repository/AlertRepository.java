@@ -17,9 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import amini.model.Alert;
 import lombok.SneakyThrows;
 import lombok.val;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Repository
 public class AlertRepository {
 
@@ -44,7 +42,6 @@ public class AlertRepository {
 
 	public List<Alert> list() {
 		val request = client.prepareSearch(INDEX_NAME).setTypes(TYPE_NAME);
-		log.info("Request: {}", request);
 
 		val response = request.get();
 		val hits = response.getHits().getHits();

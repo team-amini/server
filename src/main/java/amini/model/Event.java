@@ -21,8 +21,7 @@ public class Event {
 	String longitudeTo;
 	
 	boolean insider = false; 
-	
-	float amount;
 	float balance;
+	float amount;
 	
 }

@@ -79,8 +79,6 @@ public class EventRepository {
 		}
 
 		val request = client.prepareSearch(INDEX_NAME).setTypes(TYPE_NAME).setQuery(query).addSort("timestamp", ASC);
-		log.info("Request: {}", request);
-
 		val response = request.get();
 		val hits = response.getHits().getHits();
 		return Stream.of(hits).map(this::convert).collect(toList());

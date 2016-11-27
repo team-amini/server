@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import amini.model.Alert;
@@ -32,9 +32,9 @@ public class AlertController {
 
 		return alert;
 	}
-	
+
 	@PutMapping("/alerts/{id}/disable")
-	public Alert disable(@RequestParam("id") String id) {
+	public Alert disable(@PathVariable("id") String id) {
 		val alert = repository.get(id);
 		alert.setDisabled(true);
 		repository.save(alert);
@@ -42,9 +42,9 @@ public class AlertController {
 
 		return alert;
 	}
-	
+
 	@PutMapping("/alerts/{id}/enable")
-	public Alert enable(@RequestParam("id") String id) {
+	public Alert enable(@PathVariable("id") String id) {
 		val alert = repository.get(id);
 		alert.setDisabled(false);
 		repository.save(alert);
@@ -52,7 +52,6 @@ public class AlertController {
 
 		return alert;
 	}
-
 
 	@GetMapping("/alerts")
 	public List<Alert> list() {

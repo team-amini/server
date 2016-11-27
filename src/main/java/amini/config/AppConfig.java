@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableScheduling
 @Configuration
 public class AppConfig {
-
+	
 	@Value("classpath:wallet.json")
 	private Resource wallet;
 
@@ -66,5 +66,5 @@ public class AppConfig {
 		return new PreBuiltTransportClient(Settings.EMPTY)
 				.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(address), 9300));
 	}
-
+	
 }

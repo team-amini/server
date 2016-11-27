@@ -1,13 +1,11 @@
 package amini.service;
 
 import static java.lang.Float.parseFloat;
-import static java.lang.Thread.sleep;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-
-import javax.annotation.PostConstruct;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,15 +27,11 @@ public class SimulationService {
 	@Value("classpath:transactions.csv")
 	private Resource transactionsFile;
 
-	@PostConstruct
-	public void init() {
-		simulate();
-	}
-
 	@Async
 	@SneakyThrows
 	@SuppressWarnings("unused")
 	public void simulate() {
+		log.info("SIMULATING!!!");
 		val reader = new BufferedReader(new InputStreamReader(transactionsFile.getInputStream()));
 		String line = null;
 		boolean flag = true;
@@ -65,13 +59,19 @@ public class SimulationService {
 
 			val event = new Event().setCityFrom(cityFrom).setCityTo(cityTo).setLatitudeFrom(latitudeFrom)
 					.setLongitudeFrom(longitudeFrom).setLatitudeTo(latitudeFrom).setLongitudeTo(longitudeTo)
-					.setSenderAccount(from).setReceiverAccount(to).setAmount(parseFloat(value)).setBalance(10000.0f);
+					.setSenderAccount(from).setReceiverAccount(to).setAmount(parseFloat(value))
+					.setBalance(randFloat(1000f, 10000000f));
 
 			log.info("{}", Arrays.toString(fields));
 			service.send(event);
-			sleep(1000);
 		}
+		
+		log.info("DONE SIMULATION!!!");
+	}
 
+	private static float randFloat(float min, float max) {
+		val r = new Random();
+		return min + (float) (r.nextFloat() * ((1 + max) - min));
 	}
 
 }
