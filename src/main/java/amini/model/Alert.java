@@ -11,5 +11,6 @@ public class Alert {
 	String name;
 	String description;
 	String epl;
+	boolean disabled;
 	
 }

@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.action.support.WriteRequest.RefreshPolicy.IMMEDIATE;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.elasticsearch.client.Client;
@@ -35,9 +36,14 @@ public class AlertRepository {
 		val response = client.prepareIndex(INDEX_NAME, TYPE_NAME).setSource(source).setId(alert.getId()).setRefreshPolicy(IMMEDIATE).get();
 		alert.setId(response.getId());
 	}
+	
+	public Alert get(String id) {
+		val response = client.prepareGet().setIndex(INDEX_NAME).setType(TYPE_NAME).setId(id).get();
+		return convert(response.getSource());
+	}
 
 	public List<Alert> list() {
-		val request = client.prepareSearch(INDEX_NAME);
+		val request = client.prepareSearch(INDEX_NAME).setTypes(TYPE_NAME);
 		log.info("Request: {}", request);
 
 		val response = request.get();
@@ -46,7 +52,11 @@ public class AlertRepository {
 	}
 
 	private Alert convert(SearchHit hit) {
-		return MAPPER.convertValue(hit.getSource(), Alert.class);
+		return convert(hit.getSource());
+	}
+	
+	private Alert convert(Map<String, Object> source) {
+		return MAPPER.convertValue(source, Alert.class);
 	}
 
 	@SneakyThrows

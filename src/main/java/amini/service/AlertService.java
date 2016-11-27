@@ -58,7 +58,7 @@ public class AlertService {
 	public void register(Alert alert) {
 
 		// Setup
-		val epl = admin.createEPL(alert.getEpl());
+		val epl = admin.createEPL(alert.getEpl(), alert.getId());
 		epl.addListener(new StatementAwareUpdateListener() {
 
 			@Override
@@ -93,6 +93,24 @@ public class AlertService {
 		log.info(repeat("-", 80));
 		log.info("Executing: {}", alert);
 		log.info(repeat("-", 80));
+	}
+
+	public void enable(String id) {
+		val statement = admin.getStatement(id);
+		if (statement == null) return;
+		if (statement.isStarted()) return;
+		
+		log.info("Enabling {}...", id);
+		statement.start();
+	}
+	
+	public void disable(String id) {
+		val statement = admin.getStatement(id);
+		if (statement == null) return;
+		if (statement.isStopped()) return;
+		
+		log.info("Disabling {}...", id);
+		statement.stop();
 	}
 
 }

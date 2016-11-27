@@ -55,6 +55,8 @@ public class EventService {
 	}
 
 	public void register(ResponseBodyEmitter emitter) {
+		emitter.onCompletion(() -> emitters.remove(emitter));
+		emitter.onTimeout(() -> emitters.remove(emitter));
 		emitters.add(emitter);
 	}
 

@@ -65,7 +65,8 @@ public class SimulationService {
 
 			val event = new Event().setCityFrom(cityFrom).setCityTo(cityTo).setLatitudeFrom(latitudeFrom)
 					.setLongitudeFrom(longitudeFrom).setLatitudeTo(latitudeFrom).setLongitudeTo(longitudeTo)
-					.setSenderAccount(from).setReceiverAccount(to).setAmount(parseFloat(value));
+					.setSenderAccount(from).setReceiverAccount(to).setAmount(parseFloat(value))
+					.setBalance(10000.0f);
 
 			log.info("{}", Arrays.toString(fields));
 			service.send(event);

@@ -19,8 +19,10 @@ public class Event {
 	String longitudeFrom;
 	String latitudeTo;
 	String longitudeTo;
+	
 	boolean insider = false; 
 	
 	float amount;
+	float balance;
 	
 }
